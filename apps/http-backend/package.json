@@ -2,12 +2,19 @@
   "name": "http-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -b",
+    "start": "node ./dist/server.js",
+    "dev": "npm run build && npm run start"
   },
   "dependencies": {
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "typescript": "^5.9.3"
   },
   "keywords": [],
   "author": "",
