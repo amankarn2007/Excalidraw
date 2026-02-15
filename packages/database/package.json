@@ -2,10 +2,10 @@
   "name": "@repo/database",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "type": "module",
   "exports": {
-    ".": "./dist/db.js"
+    ".": "./dist/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,18 +13,16 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.19.11",
-    "@types/pg": "^8.16.0",
-    "prisma": "^7.4.0",
-    "tsx": "^4.21.0"
+    "@types/node": "^22.15.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",
-    "@prisma/client": "^7.4.0",
     "dotenv": "^17.3.1",
-    "pg": "^8.18.0"
+    "prisma": "^7.4.0"
   }
 }

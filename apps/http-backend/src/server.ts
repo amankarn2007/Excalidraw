@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
 import { isLoggedIn } from "./middleware/isLoggedIn.js";
 import {CreateUserSchema} from "@repo/common";
+import { prisma } from "@repo/database";
 
 app.use(express.json());
 
@@ -38,12 +39,14 @@ app.post("/signup", async (req, res) => {
         const salt = await bcrypt.genSalt(5);
         const hash = await bcrypt.hash(password, salt);
 
-        const user = {
-            username, 
-            password: hash, 
-            firstname, 
-            lastname
-        }
+        const user = await prisma.user.create({
+            data: {
+                username,
+                password: hash,
+                firstname,
+                lastname
+            }
+        })
         console.log(user);
 
         return res.status(200).json({
