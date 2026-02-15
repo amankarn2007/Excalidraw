@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
 import { isLoggedIn } from "./middleware/isLoggedIn.js";
+import {CreateUserSchema} from "@repo/common";
 
 app.use(express.json());
 
@@ -13,9 +14,21 @@ app.get("/", (req, res) => {
 
 
 app.post("/signup", async (req, res) => {
-    const {username, password, firstname, lastname} = req.body;
+    //const {username, password, firstname, lastname} = req.body;
+
+    const parsedResult = CreateUserSchema.safeParse(req.body);
+
+    if(!parsedResult.success) {
+        return res.status(400).json({
+            message: "Something is missing",
+            error: parsedResult.error
+        })
+    }
+
+    const {username, password, firstname, lastname} = parsedResult.data;
 
     try{
+
         if(!username || !password || !firstname || !lastname){
             return res.status(400).json({
                 message: "Enter details first",
