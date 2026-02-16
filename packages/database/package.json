@@ -2,14 +2,14 @@
   "name": "@repo/database",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "index.ts",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
@@ -22,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
     "dotenv": "^17.3.1",
     "prisma": "^7.4.0"
   }
