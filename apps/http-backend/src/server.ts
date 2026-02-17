@@ -9,10 +9,11 @@ import { prisma } from "@repo/database";
 
 app.use(express.json());
 
+
+
 app.get("/", (req, res) => {
     res.send("hii");
 })
-
 
 app.post("/signup", async (req, res) => {
     //const {username, password, firstname, lastname} = req.body;
