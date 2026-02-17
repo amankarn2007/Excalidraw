@@ -1,10 +1,9 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "firstname" TEXT NOT NULL,
-    "lastname" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "photo" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -22,16 +21,16 @@ CREATE TABLE "Room" (
 
 -- CreateTable
 CREATE TABLE "Chat" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "message" TEXT NOT NULL,
-    "roomId" INTEGER NOT NULL,
     "userId" TEXT NOT NULL,
+    "roomId" INTEGER NOT NULL,
 
     CONSTRAINT "Chat_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Room_slug_key" ON "Room"("slug");
@@ -40,7 +39,7 @@ CREATE UNIQUE INDEX "Room_slug_key" ON "Room"("slug");
 ALTER TABLE "Room" ADD CONSTRAINT "Room_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Chat" ADD CONSTRAINT "Chat_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Chat" ADD CONSTRAINT "Chat_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Chat" ADD CONSTRAINT "Chat_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Chat" ADD CONSTRAINT "Chat_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "Room"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

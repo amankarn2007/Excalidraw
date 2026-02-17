@@ -1,9 +1,9 @@
 import { z } from "zod";
 export declare const CreateUserSchema: z.ZodObject<{
-    username: z.ZodString;
+    email: z.ZodString;
     password: z.ZodString;
-    firstname: z.ZodString;
-    lastname: z.ZodString;
+    name: z.ZodString;
+    photo: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 export declare const SigninSchema: z.ZodObject<{
     username: z.ZodString;

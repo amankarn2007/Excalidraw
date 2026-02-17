@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
 import { isLoggedIn } from "./middleware/isLoggedIn.js";
 import {CreateUserSchema} from "@repo/common";
-import { prisma } from "@repo/database";
+import { prismaClient } from "@repo/db/client";
 
 app.use(express.json());
 
@@ -27,11 +27,11 @@ app.post("/signup", async (req, res) => {
         })
     }
 
-    const {username, password, firstname, lastname} = parsedResult.data;
+    const {email, password, name, photo} = parsedResult.data;
 
     try{
 
-        if(!username || !password || !firstname || !lastname){
+        if(!email || !password || !name ){
             return res.status(400).json({
                 message: "Enter details first",
             })
@@ -40,20 +40,13 @@ app.post("/signup", async (req, res) => {
         const salt = await bcrypt.genSalt(5);
         const hash = await bcrypt.hash(password, salt);
 
-        const user = await prisma.user.create({
+        const user = await prismaClient.user.create({
             data: {
-                username,
+                email,
                 password: hash,
-                firstname,
-                lastname
+                name
             }
         })
-        //const user = {
-        //    username,
-        //    password: hash,
-        //    firstname,
-        //    lastname
-        //}
         console.log(user);
 
         return res.status(200).json({
