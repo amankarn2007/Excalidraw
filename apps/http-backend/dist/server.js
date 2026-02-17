@@ -36,6 +36,12 @@ app.post("/signup", async (req, res) => {
                 lastname
             }
         });
+        //const user = {
+        //    username,
+        //    password: hash,
+        //    firstname,
+        //    lastname
+        //}
         console.log(user);
         return res.status(200).json({
             message: "User registerd successfully",
