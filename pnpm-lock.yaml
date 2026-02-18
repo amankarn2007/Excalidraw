@@ -179,6 +179,9 @@ importers:
       '@types/node':
         specifier: ^22.15.3
         version: 22.19.11
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
       prisma:
         specifier: ^7.4.0
         version: 7.4.0(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)

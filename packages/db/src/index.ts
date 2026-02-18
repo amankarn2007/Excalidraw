@@ -3,8 +3,7 @@ import pg from 'pg'
 import dotenv from 'dotenv'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
-//@ts-ignore
-import { PrismaClient } from './generated/prisma'
+import { PrismaClient } from './generated/prisma/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

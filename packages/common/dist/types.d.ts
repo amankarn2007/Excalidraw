@@ -6,7 +6,7 @@ export declare const CreateUserSchema: z.ZodObject<{
     photo: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 export declare const SigninSchema: z.ZodObject<{
-    username: z.ZodString;
+    email: z.ZodString;
     password: z.ZodString;
 }, z.core.$strip>;
 export declare const CreateRoomSchema: z.ZodObject<{

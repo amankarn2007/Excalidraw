@@ -15,6 +15,7 @@ export const isLoggedIn = async (req: Request, res: Response, next: NextFunction
         }
 
         const decoded = await jwt.verify(token, JWT_SECRET);
+        //console.log(decoded);
 
         if(decoded){
             //@ts-ignore
@@ -28,6 +29,6 @@ export const isLoggedIn = async (req: Request, res: Response, next: NextFunction
 
     } catch(err){
         console.log(err);
-        res.send("Error");
+        res.send("maybe wrong token");
     }
 }

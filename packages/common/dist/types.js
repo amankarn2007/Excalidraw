@@ -6,7 +6,7 @@ export const CreateUserSchema = z.object({
     photo: z.string().optional(),
 });
 export const SigninSchema = z.object({
-    username: z.string(),
+    email: z.string(),
     password: z.string(),
 });
 export const CreateRoomSchema = z.object({
