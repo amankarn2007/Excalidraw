@@ -1,6 +1,7 @@
 import WebSocket, { WebSocketServer } from "ws";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
+import { prismaClient } from "@repo/db/client";
 
 const wss = new WebSocketServer({port: 8080});
 
@@ -43,7 +44,7 @@ wss.on("connection", async function connection(ws, request){
     const token = queryParams.get('token')
     if(!token) return;
 
-    const userId = checkUser(token); //verify user
+    const userId = checkUser(token); //verify user and return's userId
     console.log(userId);
 
     if(!userId) {
@@ -58,7 +59,7 @@ wss.on("connection", async function connection(ws, request){
     })
 
 
-    ws.on("message", function message(data) { //handle msg
+    ws.on("message", async function message(data) { //handle msg
 
        const parsedData = JSON.parse(data as unknown as string);
         //parsedData = { "type": "join_room", "roomId": "room1", "message": "hi there" }
@@ -83,6 +84,14 @@ wss.on("connection", async function connection(ws, request){
             
             const roomId = parsedData.roomId; //roomId
             const message = parsedData.message; //msg
+
+            await prismaClient.chat.create({
+                data: {
+                    message: message,
+                    roomId: roomId,
+                    userId: userId,
+                }
+            })
 
             users.forEach(user => { //traverse on users
 

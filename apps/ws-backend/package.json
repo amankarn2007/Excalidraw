@@ -12,8 +12,11 @@
   },
   "dependencies": {
     "@prisma/client": "^7.4.0",
+
     "@repo/backend-common": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/db": "workspace:*",
+
     "@types/jsonwebtoken": "^9.0.10",
     "@types/ws": "^8.18.1",
     "jsonwebtoken": "^9.0.3",
