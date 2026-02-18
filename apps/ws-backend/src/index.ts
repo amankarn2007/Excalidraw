@@ -1,7 +1,8 @@
 import WebSocket, { WebSocketServer } from "ws";
-const wss = new WebSocketServer({port: 8080});
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
+
+const wss = new WebSocketServer({port: 8080});
 
 interface User {
     ws: WebSocket,
@@ -15,16 +16,17 @@ function checkUser(token: string): string | null { //check jwt token
     try{
         //@ts-ignore
         const decoded = jwt.verify(token, JWT_SECRET);
-    
-        if(typeof decoded === 'string'){
+        //console.log(decoded);
+        
+        if(typeof decoded == 'string'){
             return null;
         }
     
-        if(!decoded || !decoded.email){
+        if(!decoded || !decoded.userId){
             return null;
         }
     
-        return decoded.email; //this func will return email
+        return decoded.userId; //this func will return email
 
     } catch(e) {
         console.log("ERROR in check User");
@@ -42,8 +44,9 @@ wss.on("connection", async function connection(ws, request){
     if(!token) return;
 
     const userId = checkUser(token); //verify user
+    console.log(userId);
 
-    if(userId == null) {
+    if(!userId) {
         ws.close();
         return null;
     }
@@ -60,21 +63,23 @@ wss.on("connection", async function connection(ws, request){
        const parsedData = JSON.parse(data as unknown as string);
         //parsedData = { "type": "join_room", "roomId": "room1", "message": "hi there" }
 
-       if(parsedData.type === 'join_room') {
+        if(parsedData.type === 'join_room') {
             const user = users.find(x => x.ws === ws); //find user
 
             user?.rooms.push(parsedData.roomId); //add user's roomId in room
+            console.log("join: " + user?.rooms)
         }
 
-       if(parsedData.type === 'leave_room') {
+        if(parsedData.type === 'leave_room') {
             const user = users.find(x => x.ws === ws); //find user
             if(!user) return;
 
             user.rooms = user?.rooms.filter(x => x !== parsedData.roomId); //remove user roomId
+            console.log("leaved: " + user.rooms)
         }
 
         if(parsedData.type === "chat") {
-            //console.log("CHAT RECEIVED:", parsedData);
+            console.log("CHAT RECEIVED:", parsedData);
             
             const roomId = parsedData.roomId; //roomId
             const message = parsedData.message; //msg
