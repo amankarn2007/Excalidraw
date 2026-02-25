@@ -80,7 +80,7 @@ wss.on("connection", async function connection(ws, request){
         }
 
         if(parsedData.type === "chat") {
-            console.log("CHAT RECEIVED:", parsedData);
+            //console.log("CHAT RECEIVED:", parsedData);
             
             const roomId = parsedData.roomId; //roomId
             const message = parsedData.message; //msg
@@ -94,6 +94,7 @@ wss.on("connection", async function connection(ws, request){
             })
 
             users.forEach(user => { //traverse on users
+                //console.log(users.length);
 
                 if(user.rooms.includes(roomId)){ //if roomId matche's
 

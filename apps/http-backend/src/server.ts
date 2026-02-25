@@ -168,6 +168,44 @@ app.post("/room", isLoggedIn, async (req, res) => {
 
 })
 
+app.get("/chats/:roomId", async (req, res) => {
+    const roomId = req.params.roomId;
+
+    try{
+        const messages = await prismaClient.chat.findMany({
+            where: {
+                roomId: Number(roomId)
+            },
+            orderBy: {
+                id: "desc"
+            },
+            take: 50, //shows 50 messages only
+        })
+
+        return res.status(200).json({
+            message: messages
+        })
+    } catch(err) {
+        console.log("Error catch in chats route");
+        return res.status(401).json({
+            message: "Error"
+        })
+    }
+})
+
+app.get("room/:slug", async (req, res) => {
+    const slug = req.params.slug;
+
+    const roomId = await prismaClient.room.findFirst({
+        where: {
+            slug: slug,
+        }
+    })
+
+    return res.status(200).json({
+        message: "Room" + roomId,
+    })
+})
 
 app.listen(3000, () => {
     console.log("listning on port 3000");
