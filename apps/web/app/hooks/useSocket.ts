@@ -7,7 +7,7 @@ export function useSocket() {
     const [socket, setSocket] = useState<WebSocket>();
 
     useEffect(() => {
-        const ws = new WebSocket(WS_URL);
+        const ws = new WebSocket(`${WS_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTNkMGZmYy1kNjlmLTQ0ZGUtYWU5Mi0yNjBlNjg1ZTQ1YTgiLCJpYXQiOjE3NzIwNDI0NzR9.dvUntObaplRNFKO_eViE3J0VT7t5U0dh3K-LHkgcB18`);
 
         ws.onopen = () => {
             setLoading(false);
@@ -18,9 +18,7 @@ export function useSocket() {
             console.log("Disconnected");
         }
 
-        return () => {
-            ws.close();
-        }
+        return () => ws.close();
     }, [])
 
     return {
