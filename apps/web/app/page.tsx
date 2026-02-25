@@ -22,8 +22,8 @@ export default function Home() {
           }} style={{borderRadius: "5px", padding: "2px 10px", background: "white", cursor: "pointer", backgroundColor: "skyblue"}}>Join room</button>
         </div>
 
-        <div style={{width: "full"}}>
-          messages
+        <div style={{width: "full"}} className="bg-blue">
+          
         </div>
 
       </div>
@@ -33,7 +33,7 @@ export default function Home() {
   );
 }
 
-const homeStyle = {
+const homeStyle: any = {
   width: "480px", 
   height: "625px", 
   background: "pink", 
