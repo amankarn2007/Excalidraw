@@ -183,7 +183,7 @@ app.get("/chats/:roomId", async (req, res) => {
         })
 
         return res.status(200).json({
-            message: messages
+            messages: messages
         })
     } catch(err) {
         console.log("Error catch in chats route");
@@ -193,7 +193,7 @@ app.get("/chats/:roomId", async (req, res) => {
     }
 })
 
-app.get("room/:slug", async (req, res) => {
+app.get("/room/:slug", async (req, res) => { //this will find the room
     const slug = req.params.slug;
 
     const roomId = await prismaClient.room.findFirst({
@@ -202,8 +202,14 @@ app.get("room/:slug", async (req, res) => {
         }
     })
 
+    if (!roomId) {
+        return res.status(404).json({
+            message: "Room not found"
+        });
+    }
+    
     return res.status(200).json({
-        message: "Room" + roomId,
+        room: roomId,
     })
 })
 

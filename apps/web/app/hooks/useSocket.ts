@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { WS_URL } from "../config";
 
+//conection with websocket
 export function useSocket() {
     const [loading, setLoading] = useState(true);
     const [socket, setSocket] = useState<WebSocket>();
@@ -12,7 +13,15 @@ export function useSocket() {
             setLoading(false);
             setSocket(ws);
         }
-    })
+
+        ws.onclose = () => {
+            console.log("Disconnected");
+        }
+
+        return () => {
+            ws.close();
+        }
+    }, [])
 
     return {
         socket,

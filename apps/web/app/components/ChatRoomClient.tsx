@@ -1,8 +1,8 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { useSocket } from "../hooks/useSocket";
 
+//web socket connection
 export function ChatRoomClient({ 
     messages, id
 }: {
@@ -10,9 +10,12 @@ export function ChatRoomClient({
     id: string
 }) {
 
-    const [chats, setChats] = useState(messages);
+    const [chats, setChats] = useState(messages); //prev msg already here
     const [currentMessage, setCurrentMessage] = useState("");
     const {socket, loading} = useSocket();
+
+    console.log("ChatRoomClient render");
+
 
     useEffect(() => {
         if(socket && !loading) {
@@ -24,9 +27,10 @@ export function ChatRoomClient({
 
             socket.onmessage = (event) => {
                 const parsedData = JSON.parse(event.data);
+                console.log(parsedData);
 
                 if(parsedData.type === "chat") {
-                    setChats(c => [...c, parsedData.messages])
+                    setChats(c => [...c, parsedData.message])
                 }
             }
         }
@@ -35,7 +39,11 @@ export function ChatRoomClient({
 
     return (
         <div>
-            { messages.map(m => <div> {m.message} </div>) }
+            {/*{ chats.map(m => <div> {m.message} </div>) }*/}
+
+            {chats.map((m, index) => (
+                <div key={index}>{m.message}</div>
+            ))}
 
             <input type="text" value={currentMessage} onChange={e => {
                 setCurrentMessage(e.target.value);
