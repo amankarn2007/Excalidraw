@@ -23,7 +23,7 @@ export default function Home() {
           }}>Join room</button>
         </div>
 
-        <div style={{width: "full"}} className="bg-blue">
+        <div style={{width: "full", backgroundColor: "white"}} className="bg-blue">
           chats
         </div>
 
