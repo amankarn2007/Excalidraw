@@ -195,6 +195,7 @@ app.get("/chats/:roomId", async (req, res) => {
 
 app.get("/room/:slug", async (req, res) => { //this will find the room
     const slug = req.params.slug;
+    //console.log(slug);
 
     const roomId = await prismaClient.room.findFirst({
         where: {
@@ -207,7 +208,7 @@ app.get("/room/:slug", async (req, res) => { //this will find the room
             message: "Room not found"
         });
     }
-    
+
     return res.status(200).json({
         room: roomId,
     })
