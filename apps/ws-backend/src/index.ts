@@ -96,7 +96,7 @@ wss.on("connection", async function connection(ws, request){
             users.forEach(user => { //traverse on users
                 //console.log(users.length);
 
-                if(user.rooms.includes(roomId)){ //if roomId matche's
+                if(String(user.rooms.includes(roomId))){ //if roomId matche's
 
                     user.ws.send(JSON.stringify({ //then send msg
                         type: "chat",

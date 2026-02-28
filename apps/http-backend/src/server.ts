@@ -12,7 +12,7 @@ app.use(express.json());
 
 
 app.get("/", (req, res) => {
-    res.send("hii");
+    res.send("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 })
 
 app.post("/signup", async (req, res) => {
@@ -61,9 +61,10 @@ app.post("/signup", async (req, res) => {
 
     } catch(err) {
         //console.log(err);
-        console.log("ERROR IN SIGNUP ENDPOINT")
+        console.log("ERROR IN SIGNUP ENDPOINT", err);
         return res.json({
-            message: "Error in signup endpoint"
+            message: "Error in signup endpoint",
+            err,
         })
     }
 
@@ -194,24 +195,31 @@ app.get("/chats/:roomId", async (req, res) => {
 })
 
 app.get("/room/:slug", async (req, res) => { //this will find the room
-    const slug = req.params.slug;
-    //console.log(slug);
+    try{
+        const slug = req.params.slug;
+        console.log(slug);
+    
+        const room = await prismaClient.room.findFirst({
+            where: {
+                slug: slug,
+            }
+        })
+    
+        console.log("Room found in DB", room)
 
-    const roomId = await prismaClient.room.findFirst({
-        where: {
-            slug: slug,
+        if (!room) {
+            return res.status(404).json({
+                message: "Room not found"
+            });
         }
-    })
-
-    if (!roomId) {
-        return res.status(404).json({
-            message: "Room not found"
-        });
+    
+        return res.status(200).json({
+            room: room,
+        })
+    } catch(err) {
+        console.log(err);
+        return res.send("Error in Backend");
     }
-
-    return res.status(200).json({
-        room: roomId,
-    })
 })
 
 app.listen(3000, () => {

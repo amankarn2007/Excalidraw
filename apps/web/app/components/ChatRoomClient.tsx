@@ -18,29 +18,43 @@ export function ChatRoomClient({
     useEffect(() => { //send connection request to  ws
         if(socket && !loading) {
             
-            socket.send(JSON.stringify({
-                type: "join_room",
-                roomId: id
-            }))
-
-            socket.onmessage = (event) => {
-                alert(event)
-                
+            const messageHandler = (event: MessageEvent) => {
                 const parsedData = JSON.parse(event.data);
-                console.log(parsedData);
 
-                if(parsedData.type === "chat") {
-                    setChats(c => [...c, {message: parsedData.message}])
+                if(parsedData.type === "chat"){
+                    setChats(prev => [...prev, {message: parsedData.message}]);
                 }
+            }
+
+            socket.addEventListener("message", messageHandler); //
+
+            //cleanup function
+            return () => {
+                socket.removeEventListener("message", messageHandler);
+                socket.send(JSON.stringify({
+                    type: "leave_room",
+                    roomId: id,
+                }))
             }
         }
     }, [socket, loading, id])
 
 
+    const sendMessage = () => {
+        if(!currentMessage.trim()) return; //return empty msg
+
+        socket?.send(JSON.stringify({
+            type: "chat",
+            roomId: id,
+            messages: currentMessage,
+        }));
+
+        setCurrentMessage("");
+    }
+
+
     return (
         <div>
-            {/*{ chats.map(m => <div> {m.message} </div>) }*/}
-
             {chats.map((m, index) => (
                 <div key={index}> {m.message} </div>
             ))}
@@ -49,15 +63,7 @@ export function ChatRoomClient({
                 setCurrentMessage(e.target.value);
             }} />
 
-            <button onClick={() => {
-                socket?.send(JSON.stringify({
-                    type: "chat",
-                    roomId: id,
-                    message: currentMessage
-                }))
-
-                setCurrentMessage("");
-            }}>Send message</button>
+            <button onClick={sendMessage}>Send message</button>
         </div>
     )
 }
