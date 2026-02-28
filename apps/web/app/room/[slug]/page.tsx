@@ -1,12 +1,12 @@
 import axios from "axios"
-import { BACKEND_URL } from "../../config"
 import { ChatRoom } from "../../components/ChatRoom";
 
-//URL se slug lena, Backend se roomId nikalna, Validate karna
-async function getRoomId(slug: string) {
+//ye slug se id find krke ChatRoom ko bhejdega
+
+async function getRoomId(slug: string) { //get roomId with slug
     try{
         const fullUrl = `http://localhost:3000/room/${slug}`;
-        console.log(fullUrl);
+        //console.log(fullUrl);
         
         const response = await axios.get(fullUrl);
     
@@ -19,14 +19,12 @@ async function getRoomId(slug: string) {
 }
 
 
-export default async function ChatRoom1({
-    params,
-}: {
+export default async function ChatRoom1({params,}: {
     params: {slug: string}
 }) {
-    
-    const {slug} = await params; //slug means room name
+
+    const {slug} = await params;
     const roomId = await getRoomId(slug);
 
-    return <ChatRoom id={roomId} />
+    return <ChatRoom id={roomId} /> //send roomId to ChatRoom
 }

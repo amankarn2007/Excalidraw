@@ -169,7 +169,7 @@ app.post("/room", isLoggedIn, async (req, res) => {
 
 })
 
-app.get("/chats/:roomId", async (req, res) => {
+app.get("/chats/:roomId", async (req, res) => { //send latest 50 msgs
     const roomId = req.params.roomId;
 
     try{
@@ -194,10 +194,10 @@ app.get("/chats/:roomId", async (req, res) => {
     }
 })
 
-app.get("/room/:slug", async (req, res) => { //this will find the room
+app.get("/room/:slug", async (req, res) => { //this will find the roomId with the help of slug
     try{
         const slug = req.params.slug;
-        console.log(slug);
+        //console.log(slug);
     
         const room = await prismaClient.room.findFirst({
             where: {
@@ -213,7 +213,7 @@ app.get("/room/:slug", async (req, res) => { //this will find the room
             });
         }
     
-        return res.status(200).json({
+        return res.status(200).json({ //returned roomId
             room: room,
         })
     } catch(err) {
