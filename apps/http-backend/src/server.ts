@@ -1,6 +1,7 @@
 import express from "express";
 const app = express();
 import bcrypt from "bcrypt";
+import cors from "cors"
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
 import { isLoggedIn } from "./middleware/isLoggedIn.js";
@@ -8,7 +9,7 @@ import {CreateRoomSchema, CreateUserSchema, SigninSchema} from "@repo/common";
 import { prismaClient } from "@repo/db/client";
 
 app.use(express.json());
-
+app.use(cors())
 
 
 app.get("/", (req, res) => {
@@ -170,18 +171,29 @@ app.post("/room", isLoggedIn, async (req, res) => {
 })
 
 app.get("/chats/:roomId", async (req, res) => { //send latest 50 msgs
-    const roomId = req.params.roomId;
+    const roomSlug = req.params.roomId; //'testing'
 
     try{
+        const room = await prismaClient.room.findFirst({
+            where: { slug: roomSlug }
+        });
+        //console.log(room?.id);
+
+        //@ts-ignore
+        if (!room.id) {
+            return res.status(404).json({ message: "Room not found" });
+        }
+
         const messages = await prismaClient.chat.findMany({
             where: {
-                roomId: Number(roomId)
+                roomId: Number(room?.id)
             },
             orderBy: {
                 id: "desc"
             },
             take: 50, //shows 50 messages only
         })
+        //console.log(messages);
 
         return res.status(200).json({
             messages: messages
@@ -222,6 +234,6 @@ app.get("/room/:slug", async (req, res) => { //this will find the roomId with th
     }
 })
 
-app.listen(3000, () => {
-    console.log("listning on port 3000");
+app.listen(3001, () => {
+    console.log("listning on port 3001");
 });

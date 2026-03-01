@@ -5,7 +5,7 @@ import { ChatRoom } from "../../components/ChatRoom";
 
 async function getRoomId(slug: string) { //get roomId with slug
     try{
-        const fullUrl = `http://localhost:3000/room/${slug}`;
+        const fullUrl = `http://localhost:3001/room/${slug}`;
         //console.log(fullUrl);
         
         const response = await axios.get(fullUrl);
