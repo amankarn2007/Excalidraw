@@ -65,7 +65,7 @@ type CardProps = {
 
 function Card({icon, iconColor, title, para}: CardProps) {
     return(
-        <div className="flex flex-col bg-white rounded-2xl w-100 h-70 py-8 px-10">
+        <div className="flex flex-col bg-white rounded-2xl w-100 h-70 py-8 px-10 hover:scale-105 transition-transform shadow-2xl hover:shadow-blue-500">
             <div className={`bg-${iconColor}-100 h-15 w-15 rounded-xl text-${iconColor}-600 flex items-center justify-center`}>{icon}</div>
             <h3 className="text-2xl font-bold my-5">{title}</h3>
             <p className="text-lg text-gray-600">{para}</p>

@@ -7,7 +7,7 @@ export default function Section4() {
                 <p className="text-2xl text-gray-200 pt-5">Join millions of users who trust Excaidraw for their visual collabration needs</p>
             </div>
 
-            <button className="py-4 px-8 rounded-2xl text-blue-600 font-bold text-xl mt-10 bg-white">Launch Excalidraw</button>
+            <button className="py-4 px-8 rounded-2xl text-blue-600 font-bold text-xl mt-10 bg-white hover:scale-105 transition-transform cursor-pointer hover:bg-gray-200">Launch Excalidraw</button>
         </div>
     )
 }
