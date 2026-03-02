@@ -52,7 +52,11 @@ export function AuthPage({isSignin}: {
             const jwt = response.data.token;
             localStorage.setItem("token", jwt);
             
-            navigate.push("/dashboard");
+            const timer = setTimeout(() => {
+                navigate.push("/dashboard");
+            }, 1000);
+
+            return () => clearTimeout(timer);
 
         } catch (err: any) {
             if(err.response) {

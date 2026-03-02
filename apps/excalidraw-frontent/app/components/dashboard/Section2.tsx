@@ -55,7 +55,7 @@ function Card({label, time}: {label: string, time: string}) {
                     <p className="text-xs opacity-80"> {time} </p>
                 </div>
 
-                <div className=" hover:bg-gray-300 px-0.5 rounded-md">
+                <div className="hover:bg-gray-300 px-0.5 rounded-md">
                     <i className="fa-solid fa-ellipsis text-sm"></i>
                 </div>
             </div>
