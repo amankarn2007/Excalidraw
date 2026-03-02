@@ -1,6 +1,9 @@
-
+"use client"
+import { useRouter } from "next/navigation"
 
 export default function Section1() {
+    const router = useRouter();
+
     return(
         <div className="flex justify-center flex-col items-center pt-15 pb-20">
             <div className="flex flex-col justify-center items-center">
@@ -11,7 +14,7 @@ export default function Section1() {
                 </div>
 
                 <div className="pt-8">
-                    <button className="px-8 py-4 bg-blue-600 rounded-2xl text-white text-lg font-medium cursor-pointer hover:bg-blue-700 scale-100 transition-transform hover:scale-105">Start Drawing Now</button>
+                    <button className="px-8 py-4 bg-blue-600 rounded-2xl text-white text-lg font-medium cursor-pointer hover:bg-blue-700 scale-100 transition-transform hover:scale-105" onClick={() => router.push("/signup")}>Start Drawing Now</button>
 
                     <button className="px-8 py-4 bg-gray-200 rounded-2xl text-lg mx-5 font-medium cursor-pointer hover:bg-gray-300 scale-100 transition-transform hover:scale-105">View Examples</button>
                 </div>

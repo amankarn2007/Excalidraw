@@ -40,7 +40,7 @@ app.post("/signup", async (req, res) => {
         })
 
         if(findUser) {
-            return res.status(400).json({
+            return res.status(409).json({
                 message: "User already exists"
             })
         }
@@ -78,8 +78,8 @@ app.post("/signin", async (req, res) => {
 
     if(!parsedData.success){
         return res.json({
-            status: 401,
-            message: "Can't parse the data"
+            status: 400,
+            message: "Something is missing"
         })
     }
 
@@ -91,8 +91,7 @@ app.post("/signin", async (req, res) => {
                 email
             }
         })
-
-        if(!user) return res.status(400).json("Can't find user");
+        if(!user) return res.status(404).json("Can't find user");
    
         const result = await bcrypt.compare(password, user.password);
         if(!result) {
