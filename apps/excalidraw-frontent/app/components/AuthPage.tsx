@@ -1,7 +1,7 @@
 "use client"
-
 import { HTTP_BACKEND } from "@/config";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -12,9 +12,9 @@ export function AuthPage({isSignin}: {
     const passwordRef = useRef<HTMLInputElement>(null);
     const nameRef = useRef<HTMLInputElement>(null);
     const [msg, setMsg] = useState(""); //backend response msg
+    const navigate = useRouter(); //should be on the top of component level
 
-
-    useEffect(() => { //msg aur input box ko clear krega after 5 sec\
+    useEffect(() => { //msg aur input box ko clear krega after 5 sec
         //clear the input box
         if (emailRef.current) emailRef.current.value = "";
         if (passwordRef.current) passwordRef.current.value = "";
@@ -31,6 +31,7 @@ export function AuthPage({isSignin}: {
 
 
     async function Signin() { //login func
+
         try {
             const email = emailRef.current?.value;
             const password = passwordRef.current?.value;
@@ -40,13 +41,18 @@ export function AuthPage({isSignin}: {
                 password
             })
 
-            if(response.status === 200 ){
+            if(response.status !== 200){
+                return;
+            } else{
                 setMsg(response.data.message);
             }
-            //console.log(response.data);
+            console.log(response.data);
 
             //now set the token in headers
+            const jwt = response.data.token;
+            localStorage.setItem("token", jwt);
             
+            navigate.push("/dashboard");
 
         } catch (err: any) {
             if(err.response) {
