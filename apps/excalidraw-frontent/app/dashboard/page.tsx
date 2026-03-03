@@ -1,3 +1,4 @@
+import AuthGuard from "../components/AuthGuard";
 import Main from "../components/dashboard/Main";
 import Navbar from "../components/dashboard/Navbar";
 
@@ -5,9 +6,11 @@ import Navbar from "../components/dashboard/Navbar";
 export default function Dashboard() {
     
     return (
-        <div>
-            <Navbar />
-            <Main />
-        </div>
+        <AuthGuard>
+            <div>
+                <Navbar />
+                <Main />
+            </div>
+        </AuthGuard>
     )
 }

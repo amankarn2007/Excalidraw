@@ -8,8 +8,8 @@ export default function Section3() {
             </div>
 
             <div className="mt-5 mx-2 px-2 border rounded-xl border-gray-300 ">
-                <List label="API Design" by="by Sarah K. · 5 min ago" />
-                <List label="Landing Page Draft" by="by Mike R. · 1 day ago" />
+                <List label="API Design" by="Aman Karn. · 5 min ago" />
+                <List label="Landing Page Creater" by="by Aman K. · 1 day ago" />
             </div>
         </div>
     )

@@ -1,12 +1,42 @@
 "use client";
-import { useState } from "react";
+import { HTTP_BACKEND } from "@/config";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
+interface Room {
+    id: number;
+    slug: string;
+    createdAt: Date
+}
 
 export default function Section2() {
+    const router = useRouter()
     const [showCard, setShowCard] = useState(true);
+    const [rooms, setRooms] = useState<Room[]>([]);
+    
+    const token = localStorage.getItem("token");
+
+    async function fetchData() {
+        const reponse = await axios.get(`${HTTP_BACKEND}/rooms`, {
+            headers: {
+                "Authorization": token,
+            }
+        })
+        //console.log(reponse.data.rooms);
+        setRooms(reponse.data.rooms);
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    function showRoom(roomName: string) {
+        router.push(`/canvas/${roomName}`)
+    }
 
     return (
-        <div className="px-8">
+        <div className="px-8" id="drawing-history">
 
             <div className="pt-10 flex justify-between px-2 items-center">
                 <p className="text-sm font-medium opacity-80">Recent drawings</p>
@@ -22,32 +52,43 @@ export default function Section2() {
             </div>
 
             { showCard ? 
-                <div className="flex flex-wrap justify-center gap-5 mt-5">
-                    <Card label="System Architecture" time="2 min ago" />
-                    <Card label="Wireframe v2" time="1 hour ago" />
-                    <Card label="Flowchart Onboarding" time="2 min ago" />
-                    <Card label="Brand Moodboard" time="Yesterday" />
-                    <Card label="DB Schema" time="2 days ago" />
-                    <Card label="Sprint Planning" time="3 days ago" />
+                <div className="flex flex-wrap gap-5 mt-5">
+                    { rooms !== null && 
+                        rooms.map((room) => (
+                            <Card
+                                key={room.id}
+                                label={room.slug}
+                                //@ts-ignore
+                                time={room.createdAt}
+                                onClick={() => showRoom(room.slug)}
+                            />
+                        ))
+                    }
+
                 </div> :
 
                 <div className="mt-5 mx-2 px-4 border rounded-xl border-gray-300">
-                    <List label="System Architecture" time="2 min ago" />
-                    <List label="Wireframe v2" time="1 hour ago" />
-                    <List label="Flowchart Onboarding" time="2 min ago" />
-                    <List label="Brand Moodboard" time="Yesterday" />
-                    <List label="DB Schema" time="2 days ago" />
-                    <List label="Sprint Planning" time="3 days ago" />
+                    { rooms !== null && 
+                        rooms.map((room) => (
+                            <List
+                                key={room.id}
+                                label={room.slug} 
+                                //@ts-ignore
+                                time={room.createdAt}
+                                onClick={() => showRoom(room.slug)}
+                            />
+                        ))
+                    }
                 </div>
             }
         </div>
     )
 }
 
-function Card({label, time}: {label: string, time: string}) {
+function Card({label, time, onClick}: {label: string, time: string, onClick: () => void}) {
     return (
         <div className="w-90 rounded-2xl border border-gray-300 shadow cursor-pointer hover:border-blue-400">
-            <div className="h-30 bg-blue-200 rounded-t-2xl"></div>
+            <div className="h-30 bg-blue-200 rounded-t-2xl" onClick={onClick}></div>
 
             <div className="flex justify-between items-center bg-white px-3 py-5 rounded-b-2xl">
                 <div className="flex-col">
@@ -63,9 +104,10 @@ function Card({label, time}: {label: string, time: string}) {
     )
 }
 
-function List({label, time}: {label: string, time: string}) {
+function List({label, time, onClick}: {label: string, time: string, onClick: () => void}) {
     return (
-        <div className="flex justify-between items-center my-2 cursor-pointer rounded-lg py-2 px-3 hover:bg-gray-200">
+        <div className="flex justify-between items-center my-2 cursor-pointer rounded-lg py-2 px-3 hover:bg-gray-200" 
+        onClick={onClick}>
             <div className="flex">
                 <div className="bg-blue-100 w-10 h-10 rounded-lg"></div>
 

@@ -233,6 +233,75 @@ app.get("/room/:slug", async (req, res) => { //this will find the roomId with th
     }
 })
 
+app.get("/rooms", isLoggedIn, async (req, res) => {
+    try {
+        //@ts-ignore
+        const userId = req.userId;
+        const rooms = await prismaClient.room.findMany({
+            where: {
+                adminId: userId,
+            }
+        })
+        //console.log(rooms);
+
+        res.status(201).json({
+            rooms: rooms
+        })
+
+    } catch (err) {
+        res.status(401).json({
+            message: "Can't find user's room",
+        })
+        console.log(err);
+    }
+})
+
+app.delete("/room/:id", isLoggedIn, async (req, res) => {
+    try {
+        //@ts-ignore
+        const userId = req.userId;
+        const roomName = req.params.id;
+        if(roomName === null) return;
+
+        const room = await prismaClient.room.findFirst({
+            where: {
+                //@ts-ignore
+                slug: roomName,
+                adminId: userId
+            }
+        })
+        if(!room || room === undefined) return;
+        const roomId = room.id;
+
+
+        //if one fails, both will data will be safe
+        await prismaClient.$transaction([
+            prismaClient.chat.deleteMany({ //deleting chat
+                where: {
+                    roomId: roomId,
+                }
+            }),
+            prismaClient.room.delete({ //deleting room
+                where: {
+                    //@ts-ignore
+                    slug: roomName,
+                    adminId: userId,
+                }
+            })
+        ])
+        
+        res.status(202).json({
+            message: "Room deleted successfullly",
+        })
+
+    } catch (err) {
+        res.status(401).json({
+            message: "Can't delete user's room",
+        })
+        console.log(err);
+    }
+})
+
 app.listen(3001, () => {
     console.log("listning on port 3001");
 });

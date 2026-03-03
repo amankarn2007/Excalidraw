@@ -74,8 +74,15 @@ export default function Section1() {
         }
     }
 
+    function showHistory() {
+        const elm = document.getElementById("drawing-history")
+        if(elm) {
+            elm.scrollIntoView({behavior: "smooth"});
+        }
+    }
+
     return (
-        <div className="flex gap-8 justify-center pt-10">
+        <div className="flex pl-12 gap-8 justify-center pt-10">
             <Card 
                 icon={<i className="fa-solid fa-plus"></i>} 
                 iconColor="blue" 
@@ -98,7 +105,7 @@ export default function Section1() {
                 icon={<i className="fa-regular fa-clock"></i>}
                 iconColor="pink" 
                 label="Recent"
-                onClick={() => {}}
+                onClick={showHistory}
             />
 
             <CreateRoomModal 
