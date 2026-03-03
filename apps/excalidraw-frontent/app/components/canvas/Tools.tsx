@@ -61,8 +61,7 @@ interface IconProps {
 
 function IconElem({ iconName, fontIcon, isActive, onClick }: IconProps) {
     return (
-        <div onClick={onClick} className={`hover:bg-[#7a77a3] px-2 py-1 rounded-lg cursor-pointer 
-        ${isActive ? "bg-[#7a77a3]": ""}`} >
+        <div onClick={onClick} className={`hover:bg-[#7a77a3] px-2 py-1 rounded-lg cursor-pointer ${isActive && "bg-[#7a77a3]"}`} >
             
             {iconName &&
                 <span className="material-symbols-outlined text-lg! opacity-80">{iconName}</span>
