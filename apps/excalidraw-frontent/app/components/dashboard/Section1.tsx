@@ -3,13 +3,15 @@ import { HTTP_BACKEND } from "@/config";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation";
+import CreateRoomModal from "../modals/CreateRoomModal";
+import CollabRoomModal from "../modals/CollabRoomModal";
 
 export default function Section1() {
     const router = useRouter();
     const [roomModal, setRoomModal] = useState(false);
     const [collabModal, setCollabModal] = useState(false); //collabe room nodal
-    const roomIdRef = useRef<HTMLInputElement>(null);
-    const joinRoomIdRef = useRef<HTMLInputElement>(null);
+    const roomIdRef = useRef<HTMLInputElement>(null!);
+    const joinRoomIdRef = useRef<HTMLInputElement>(null!);
     const [roomCreateMesssage, setRoomCreateMessage] = useState("");
     const [collabRoomMesssage, setCollabRoomMesssage] = useState("");
 
@@ -99,63 +101,21 @@ export default function Section1() {
                 onClick={() => {}}
             />
 
-            { roomModal && 
-                <div className="fixed z-5 inset-0 w-full h-screen backdrop-blur-sm flex items-center justify-center">
-                    <div className=" h-90 w-130 bg-white border border-gray-300 rounded-xl">
-                        <div className="flex justify-end p-4">
-                            <button className="cursor-pointer" onClick={() => setRoomModal(false)}>
-                                <span className="material-symbols-outlined scale-100 hover:scale-130 transition-transform">close_small</span>
-                            </button>
-                        </div>
+            <CreateRoomModal 
+                roomModal={roomModal}
+                setRoomModal={setRoomModal}
+                roomCreateMesssage={roomCreateMesssage}
+                roomIdRef={roomIdRef}
+                sendCreateRoom={sendCreateRoom}
+            />
 
-                        <div className="flex flex-col items-center w-full px-15">
-                            <h2 className="text-xl font-medium tracking-tight italic">Create your Drawing room</h2>
-
-                            { roomCreateMesssage && 
-                                <p className="absolute z-20 text-[16px] font-medium text-green-500 tracking-tight italic pt-10">
-                                    {roomCreateMesssage} 
-                                </p>
-                            }
-
-                            <div className="flex flex-col w-full pt-10">
-                                <label className="pb-2">Room Name:</label>
-                                <input type="text" placeholder="Enter your room name" className="py-2 px-5 rounded-lg w-full outline focus:outline-blue-400 focus:outline-2" ref={roomIdRef}/>
-                            </div>
-
-                            <button className="py-2 mt-8 text-white w-full bg-green-600 rounded-lg hover:bg-green-700 cursor-pointer" onClick={sendCreateRoom}>Create</button>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            { collabModal && 
-                <div className="fixed z-5 inset-0 w-full h-screen backdrop-blur-sm flex items-center justify-center">
-                    <div className=" h-90 w-130 bg-white border border-gray-300 rounded-xl">
-                        <div className="flex justify-end p-4">
-                            <button className="cursor-pointer" onClick={() => setCollabModal(false)}>
-                                <span className="material-symbols-outlined scale-100 hover:scale-130 transition-transform">close_small</span>
-                            </button>
-                        </div>
-
-                        <div className="flex flex-col items-center w-full px-15">
-                            <h2 className="text-xl font-medium tracking-tight italic">Join your Drawing room</h2>
-
-                            { collabRoomMesssage && 
-                                <p className="absolute z-20 text-[16px] font-medium text-green-500 tracking-tight italic pt-10">
-                                    {collabRoomMesssage}
-                                </p>
-                            }
-
-                            <div className="flex flex-col w-full pt-10">
-                                <label className="pb-2">Room id:</label>
-                                <input type="text" placeholder="Enter your room id" className="py-2 px-5 rounded-lg w-full outline focus:outline-blue-400 focus:outline-2" ref={joinRoomIdRef}/>
-                            </div>
-
-                            <button className="py-2 mt-8 text-white w-full bg-blue-500 rounded-lg hover:bg-blue-600 cursor-pointer" onClick={joinCollabRoom}>Join</button>
-                        </div>
-                    </div>
-                </div>
-            }
+            <CollabRoomModal 
+                collabModal={collabModal}
+                setCollabModal={setCollabModal}
+                collabRoomMesssage={collabRoomMesssage}
+                joinRoomIdRef={joinRoomIdRef}
+                joinCollabRoom={joinCollabRoom}
+            />
         </div>
     )
 }

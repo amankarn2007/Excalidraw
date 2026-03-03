@@ -190,7 +190,7 @@ app.get("/chats/:roomId", async (req, res) => { //send latest 50 msgs
             orderBy: {
                 id: "desc"
             },
-            take: 50, //shows 50 messages only
+            take: 200, //shows 50 messages only
         })
         //console.log(messages);
 
@@ -198,7 +198,7 @@ app.get("/chats/:roomId", async (req, res) => { //send latest 50 msgs
             messages: messages
         })
     } catch(err) {
-        console.log("Error catch in chats route");
+        console.log("Error catch in chats route", err);
         return res.status(401).json({
             message: "Error"
         })
