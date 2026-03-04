@@ -200,6 +200,30 @@ export class Game {
                 this.ctx.lineTo(midX, startY); //Right Mid to Top Mid Point
                 this.ctx.stroke();
                 this.ctx.closePath();
+
+            } else if (selectedTool === "arrow") {
+                let rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.startX, this.startY);
+                this.ctx.lineTo(x, y);
+                
+                const angle = Math.atan2(y - this.startY, x - this.startX);
+
+                let newX = x-20 * Math.cos(angle - 0.5);
+                let newY = y-20 * Math.sin(angle - 0.5);
+                this.ctx.lineTo(newX, newY);
+
+                this.ctx.moveTo(x, y);
+
+                newX = x-20 * Math.cos(angle + 0.5);
+                newY = y-20 * Math.sin(angle + 0.5);
+                this.ctx.lineTo(newX, newY);
+
+                this.ctx.stroke();
+                this.ctx.closePath();
             }
         }
 
