@@ -108,7 +108,7 @@ export default function Section1() {
                 onClick={showHistory}
             />
 
-            <CreateRoomModal 
+            <CreateRoomModal
                 roomModal={roomModal}
                 setRoomModal={setRoomModal}
                 roomCreateMesssage={roomCreateMesssage}

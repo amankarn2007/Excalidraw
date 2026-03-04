@@ -35,6 +35,9 @@ export default function Navbar() {
                 
                 <div className="ml-2 px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-bold" 
                 onClick={() => router.push("signup")}>Get Started</div>
+
+                <div className="ml-5 px-9 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-bold" 
+                onClick={() => router.push("signin")}>Login</div>
             </div>
         </div>
     )

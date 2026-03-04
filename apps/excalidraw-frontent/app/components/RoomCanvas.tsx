@@ -10,7 +10,10 @@ export default function RoomCanvas({roomId}:{roomId: string}) {
 
     //connect to our ws server, so we can send & receive shapes
     useEffect(() => { //this useEffect will join us to ws
-        const ws = new WebSocket(`${WS_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZTllMGM5Zi00YTdkLTRlYTYtOTUwYS1lZWQzNTkwZWYzM2UiLCJpYXQiOjE3NzIzNzk5OTd9.sxmy2Z-1RQq4hGV8lbwsyd5f7M_cZGVXlCuJjEiNGr0`);
+        const token = localStorage.getItem("token");
+        console.log(token);
+
+        const ws = new WebSocket(`${WS_URL}?token=${token}`);
 
         ws.onopen = () => {
             setSocket(ws);

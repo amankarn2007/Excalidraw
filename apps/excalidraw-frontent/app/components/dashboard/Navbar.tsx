@@ -20,6 +20,10 @@ export default function Navbar() {
         router.push("/");
     }
 
+    function popupNewModal() {
+        
+    }
+
     return (
         <div className="h-16 w-full flex items-center bg-white fixed border border-gray-300 shadow justify-evenly z-2">
 
@@ -28,13 +32,13 @@ export default function Navbar() {
                 <h4 className="text-black text-2xl font-bold">Excalidraw</h4>
             </div>
 
-            <div className="flex gap-8">
+            <div className="flex items-center gap-8">
                 <div className="outline-1 outline-gray-300 bg-gray-100 rounded-lg py-1 px-4 focus-within:outline-2 focus-within:outline-blue-600">
                     <i className="fa-brands fa-sistrix opacity-70"></i>
                     <input type="text" placeholder="Search drawings..." className="outline-0 group pl-2"/>
                 </div>
 
-                <div className="flex bg-blue-700 rounded-lg items-center justify-center py-1.5 px-2.5 text-white cursor-pointer">
+                <div className="flex bg-blue-700 rounded-lg items-center justify-center py-1.5 px-2.5 text-white cursor-pointer" onClick={popupNewModal}>
                     <i className="fa-solid fa-plus text-sm"></i>
                     <h2 className="px-1">New</h2>
                 </div>

@@ -18,6 +18,20 @@ type Shape = {
     startY: number;
     endX: number;
     endY: number;
+} | {
+    type: "diamond";
+    startX: number;
+    startY: number;
+    midX: number;
+    midY: number;
+    x: number;
+    y: number;
+} | {
+    type: "line";
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
 }
 
 export class Game {
@@ -99,6 +113,25 @@ export class Game {
                 this.ctx.arc(shape.centerX, shape.centerY, Math.abs(shape.radius), 0, Math.PI * 2);
                 this.ctx.stroke();
                 this.ctx.closePath();
+
+            } else if(shape.type === "line") {
+                this.ctx.beginPath();
+                this.ctx.moveTo(shape.startX, shape.startY);
+                this.ctx.lineTo(shape.endX, shape.endY);
+                this.ctx.stroke();
+                this.ctx.closePath();
+
+            } else if(shape.type === "diamond") {
+                this.ctx.beginPath();
+
+                this.ctx.moveTo(shape.midX, shape.startY); //Top Point
+                this.ctx.lineTo(shape.startX, shape.midY); //Left Point
+                this.ctx.lineTo(shape.midX, shape.y); //Bottom Point
+                this.ctx.lineTo(shape.x, shape.midY); //Right Point
+                this.ctx.lineTo(shape.midX, shape.startY); //Right Mid to Top Mid Point
+
+                this.ctx.stroke();
+                this.ctx.closePath();
             }
         })
     }
@@ -134,6 +167,39 @@ export class Game {
                 this.ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
                 this.ctx.stroke();
                 this.ctx.closePath();
+
+            } else if (selectedTool === "line") {
+                let rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.startX, this.startY);
+                this.ctx.lineTo(x, y);
+                this.ctx.stroke();
+                this.ctx.closePath();
+
+            } else if (selectedTool === "diamond") {
+                const startX = this.startX;
+                const startY = this.startY;
+                
+                let rect = this.canvas.getBoundingClientRect(); //this help us to find x and y position
+                const x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+
+                const midX = (startX + x) / 2; //middile-x point of diamond
+                const midY = (startY + y) / 2; //middile-y point of diamond
+
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(midX, startY); //Top Point(top side ka, x axis mid)
+                this.ctx.lineTo(startX, midY); //Left Point(left side ka, y axis mid)
+                this.ctx.lineTo(midX, y); //Bottom Point(bottom side ka, x axis mid)
+                this.ctx.lineTo(x, midY); //Right Point(right side ka, y axis mid)
+
+                this.ctx.lineTo(midX, startY); //Right Mid to Top Mid Point
+                this.ctx.stroke();
+                this.ctx.closePath();
             }
         }
 
@@ -166,8 +232,41 @@ export class Game {
                 centerY: this.startY + (height / 2),
                 radius: radius,
             }
-        }
+        } else if (selectedTool === "line") {
+            let rect = this.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
 
+            shape = { //this will be saved in backend
+                type: "line",
+                startX: this.startX,
+                startY: this.startY,
+                endX: x,
+                endY: y,
+            }
+
+        } else if(selectedTool === "diamond") {
+
+            const startX = this.startX;
+            const startY = this.startY;
+                
+            let rect = this.canvas.getBoundingClientRect(); //this help us to find x and y position
+            const x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+
+            const midX = (startX + x) / 2; //middile-x point of diamond
+            const midY = (startY + y) / 2; //middile-y point of diamond
+
+            shape = { //save shape
+                type: "diamond",
+                startX: startX,
+                startY: startY,
+                midX: midX,
+                midY: midY,
+                x: x,
+                y: y,
+            }
+        }
 
         if (shape) {
             this.existingShapes.push(shape);

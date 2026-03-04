@@ -42,6 +42,7 @@ wss.on("connection", async function connection(ws, request){
 
     const queryParams = new URLSearchParams(url.split('?')[1]);
     const token = queryParams.get('token')
+    //console.log(token);
     if(!token) return;
 
     const userId = checkUser(token); //verify user and return's userId
