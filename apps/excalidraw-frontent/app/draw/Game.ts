@@ -21,7 +21,7 @@ type Shape = {
 }
 
 export class Game {
-
+    //private keyword can be only accessed in class, can't ouside of class
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private existingShapes: Shape[];
@@ -32,19 +32,22 @@ export class Game {
     private selectedTool: Tool = "mouse";
     private socket: WebSocket;
 
-    constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
+    constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) { //necesary props to create Gaamme class
+        //constructor is aitomatically called during making class, and make these variables properties for class
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")!;
         this.existingShapes = [];
         this.roomId = roomId;
         this.socket = socket;
         this.clicked = false;
+
+        //constructor calling these function
         this.init();
         this.initHandlers();
         this.initMouseHandlers();
     }
 
-    //remove event listner
+    //remove method of event listner
     destroy() {
         this.canvas.removeEventListener("mousedown", this.mouseDownHandler)
 
@@ -54,10 +57,11 @@ export class Game {
         this.canvas.removeEventListener("mouseup", this.mouseUpHandler)
     }
 
-    setTool(tool: "mouse" | "rect" | "diamond" | "circle" | "arrow" | "line" | "pencil" | "text") {
+    setTool(tool: Tool) {
         this.selectedTool = tool;
     }
 
+    //this function fetch existing shapes, and clear Canvas to show shapes
     async init() {
         this.existingShapes = await getExistingShapes(this.roomId);
         this.clearCanvas();
@@ -76,13 +80,13 @@ export class Game {
         }
     }
 
-    //this func will clear and render existing shapes
+    //(Painter) this func will clear and render existing shapes
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); //clear the canvas
         this.ctx.fillStyle = "#121212"; //redraw black background
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height); //set now
 
-        this.existingShapes.map((shape) => {
+        this.existingShapes.map((shape) => { //redraw all existing shapes
             this.ctx.strokeStyle = "white"; //border white
             this.ctx.lineWidth = 2; //thickness
 
@@ -99,6 +103,7 @@ export class Game {
         })
     }
 
+    //mouse click pe starting x and y positing nikalta hai
     mouseDownHandler = (e: any) => {
         this.clicked = true;
         //starting points
@@ -106,12 +111,12 @@ export class Game {
         this.startY = e.offsetY;
     }
 
+    //call clearCanvas() continously and draw temporary shape. Isi wajah se shape "khinchta" hua dikhta hai
     mouseMoveHandler = (e: any) => {
         if (this.clicked) {
             const width = e.clientX - this.startX;
             const height = e.clientY - this.startY;
 
-            //@ts-ignore
             const selectedTool = this.selectedTool; // Ref se Tool uthao
 
             this.clearCanvas(); // clear drawings, and make old drawings 
@@ -134,6 +139,7 @@ export class Game {
 
     }
 
+    //save the shape when mouse is realeased, and send to backend
     mouseUpHandler = (e: any) => {
         this.clicked = false;
         const width = e.clientX - this.startX;

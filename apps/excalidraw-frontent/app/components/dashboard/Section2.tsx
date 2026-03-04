@@ -58,7 +58,7 @@ export default function Section2() {
                             <Card
                                 key={room.id}
                                 label={room.slug}
-                                //@ts-ignore
+                                //@ts-ignoref
                                 time={room.createdAt}
                                 onClick={() => showRoom(room.slug)}
                             />

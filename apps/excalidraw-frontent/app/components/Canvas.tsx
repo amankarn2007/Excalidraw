@@ -10,8 +10,9 @@ export default function Canvas({ roomId, socket }: { roomId: string, socket: Web
     const [selectedTool, setSelectedTool] = useState<Tool>("mouse"); //topbar selected tool
     const [game, setGame] = useState<Game>(); 
 
+    //if tool changeed, inform game
     useEffect(() => { 
-        game?.setTool(selectedTool);
+        game?.setTool(selectedTool); //set tool in game class
     }, [selectedTool]);
 
     //useEffect will attach eventListner
@@ -20,11 +21,10 @@ export default function Canvas({ roomId, socket }: { roomId: string, socket: Web
             const g = new Game(canvasRef.current, roomId, socket)
             setGame(g);
 
-            return () => {
+            return () => { //cleanup
                 g.destroy();
             }
         }
-
     }, [socket]);
 
     return (
