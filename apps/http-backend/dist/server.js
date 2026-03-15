@@ -1,15 +1,16 @@
 import express from "express";
 const app = express();
 import bcrypt from "bcrypt";
+import cors from "cors";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common";
 import { isLoggedIn } from "./middleware/isLoggedIn.js";
 import { CreateRoomSchema, CreateUserSchema, SigninSchema } from "@repo/common";
 import { prismaClient } from "@repo/db/client";
 app.use(express.json());
+app.use(cors());
 app.get("/", (req, res) => {
-    console.log("req aaya");
-    res.send("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaajklsldljflkkkkkkkkkkkkkkkkkkk");
+    res.send("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 });
 app.post("/signup", async (req, res) => {
     const parsedResult = CreateUserSchema.safeParse(req.body);
@@ -29,7 +30,7 @@ app.post("/signup", async (req, res) => {
             }
         });
         if (findUser) {
-            return res.status(400).json({
+            return res.status(409).json({
                 message: "User already exists"
             });
         }
@@ -60,8 +61,8 @@ app.post("/signin", async (req, res) => {
     const parsedData = await SigninSchema.safeParse(req.body);
     if (!parsedData.success) {
         return res.json({
-            status: 401,
-            message: "Can't parse the data"
+            status: 400,
+            message: "Something is missing"
         });
     }
     try {
@@ -72,7 +73,7 @@ app.post("/signin", async (req, res) => {
             }
         });
         if (!user)
-            return res.status(400).json("Can't find user");
+            return res.status(404).json("Can't find user");
         const result = await bcrypt.compare(password, user.password);
         if (!result) {
             return res.status(401).json({
@@ -136,23 +137,32 @@ app.post("/room", isLoggedIn, async (req, res) => {
     }
 });
 app.get("/chats/:roomId", async (req, res) => {
-    const roomId = req.params.roomId;
+    const roomSlug = req.params.roomId; //'testing'
     try {
+        const room = await prismaClient.room.findFirst({
+            where: { slug: roomSlug }
+        });
+        //console.log(room?.id);
+        //@ts-ignore
+        if (!room.id) {
+            return res.status(404).json({ message: "Room not found" });
+        }
         const messages = await prismaClient.chat.findMany({
             where: {
-                roomId: Number(roomId)
+                roomId: Number(room?.id)
             },
             orderBy: {
                 id: "desc"
             },
-            take: 50, //shows 50 messages only
+            take: 200, //shows 50 messages only
         });
+        //console.log(messages);
         return res.status(200).json({
             messages: messages
         });
     }
     catch (err) {
-        console.log("Error catch in chats route");
+        console.log("Error catch in chats route", err);
         return res.status(401).json({
             message: "Error"
         });
@@ -161,7 +171,7 @@ app.get("/chats/:roomId", async (req, res) => {
 app.get("/room/:slug", async (req, res) => {
     try {
         const slug = req.params.slug;
-        console.log(slug);
+        //console.log(slug);
         const room = await prismaClient.room.findFirst({
             where: {
                 slug: slug,
@@ -182,6 +192,70 @@ app.get("/room/:slug", async (req, res) => {
         return res.send("Error in Backend");
     }
 });
-app.listen(3000, () => {
-    console.log("listning on port 3000");
+app.get("/rooms", isLoggedIn, async (req, res) => {
+    try {
+        //@ts-ignore
+        const userId = req.userId;
+        const rooms = await prismaClient.room.findMany({
+            where: {
+                adminId: userId,
+            }
+        });
+        //console.log(rooms);
+        res.status(201).json({
+            rooms: rooms
+        });
+    }
+    catch (err) {
+        res.status(401).json({
+            message: "Can't find user's room",
+        });
+        console.log(err);
+    }
+});
+app.delete("/room/:id", isLoggedIn, async (req, res) => {
+    try {
+        //@ts-ignore
+        const userId = req.userId;
+        const roomName = req.params.id;
+        if (roomName === null)
+            return;
+        const room = await prismaClient.room.findFirst({
+            where: {
+                //@ts-ignore
+                slug: roomName,
+                adminId: userId
+            }
+        });
+        if (!room || room === undefined)
+            return;
+        const roomId = room.id;
+        //if one fails, both will data will be safe
+        await prismaClient.$transaction([
+            prismaClient.chat.deleteMany({
+                where: {
+                    roomId: roomId,
+                }
+            }),
+            prismaClient.room.delete({
+                where: {
+                    //@ts-ignore
+                    slug: roomName,
+                    adminId: userId,
+                }
+            })
+        ]);
+        res.status(202).json({
+            message: "Room deleted successfullly",
+        });
+    }
+    catch (err) {
+        res.status(401).json({
+            message: "Can't delete user's room",
+        });
+        console.log(err);
+    }
+});
+app.listen(3001, () => {
+    console.log("listning on port 3001");
 });
